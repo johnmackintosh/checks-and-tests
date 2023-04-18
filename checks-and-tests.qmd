@@ -76,8 +76,7 @@ We can see the function works, but...
 
 From the help: `match.arg` matches a character arg against a table of candidate values as specified by choices.
 
-
-![When the help is no help](https://user-images.githubusercontent.com/3278367/232798629-5098186f-b70a-4fc8-9504-e71d2d772846.jpg){fig-align="left"}
+![When the help is no help](basil.jpg){fig-align="left"}
 
 Let's assume we only want to print `Highland` and `Argyll and Bute`
 
