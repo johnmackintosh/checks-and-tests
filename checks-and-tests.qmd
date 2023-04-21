@@ -2,22 +2,23 @@
 title: "checks and tests"
 author: "John MacKintosh"
 format: html
+toc: true
 ---
 
-## Checking and testing - a very quick primer
+## checking and testing - a very quick primer
 
-### Checks
+### checks
 
 -   What assumptions are you making about your data? (structure, names, types etc.)
 -   function arguments
 -   what users will and won't do
 
-### Tests
+### tests
 
 Describe what you expect your functions to do, and how they should behave with regards to user inputs
 
-Checks : assertions  
-Tests : expectations  
+Checks : assertions\
+Tests : expectations
 
 ```{r}
 #| echo: false
@@ -134,27 +135,25 @@ if no value supplied, `match.arg` uses the first element
 choose_council() # match.arg uses default arguments
 ```
 
-
-partial matching -  you can be lazy and only type the first few letters.
-This is OK for this very simple example, but not for real-life code
+partial matching - you can be lazy and only type the first few letters. This is OK for this very simple example, but not for real-life code
 
 ```{r}
 choose_council("A") # partial matching - can be risky
 ```
 
-
 ### stopifnot
 
-We saw that our function didn't work when we supplied a number. 
+We saw that our function didn't work when we supplied a number.
 
 ```{r}
 #| eval: false
 
 choose_council(1)
 ```
+
 In this case, `match.arg` has it's own checks in the background. But we can provide our own. We want to stop the function if a non character argument is provided.
 
-We use `stopifnot` to trigger immediately if a non character argument is passed. 
+We use `stopifnot` to trigger immediately if a non character argument is passed.
 
 If a character argument is passed, we use the `choices` argument of `match.arg` to validate that this is an acceptable value
 
@@ -174,7 +173,6 @@ choose_council <- function(council){
 }
 ```
 
-
 ```{r}
 #| echo: false
 
@@ -191,19 +189,17 @@ choose_council <- function(council){
 }
 ```
 
-
 ```{r}
 #| error: true
 choose_council(1)
 ```
-
 
 ```{r}
 #| error: true
 choose_council("Argyll & Bute")
 ```
 
-Yikes. 
+Yikes.
 
 We can add friendlier messages
 
@@ -222,8 +218,6 @@ stopifnot("council must be character" = is.character(council))
 }
 ```
 
-
-
 ```{r}
 #| echo: false
 choose_council <- function(council){
@@ -239,7 +233,6 @@ stopifnot("council must be character" = is.character(council))
 }
 ```
 
-
 Partial matching works as before
 
 ```{r}
@@ -247,35 +240,32 @@ choose_council("High")
 ```
 
 But now we get a slightly more readable error message
+
 ```{r}
 #| error: true
 choose_council(1)
 ```
 
-
 ## chi_check()
 
-
-https://github.com/Public-Health-Scotland/phsmethods/blob/master/R/chi_check.R
+<!--https://github.com/Public-Health-Scotland/phsmethods/blob/master/R/chi_check.R-->
 
 What needs to be checked?
 
- - Does it contain no non-numeric characters?  
- - Is it ten digits in length?  
- - Do the first six digits denote a valid date? 
- - Is the checksum digit correct?
+-   Does it contain no non-numeric characters?\
+-   Is it ten digits in length?\
+-   Do the first six digits denote a valid date?
+-   Is the checksum digit correct?
 
 We can deal with the first three quite quickly with `{checkmate}`
 
-
 ## checkmate
 
-https://mllg.github.io/checkmate/articles/checkmate.html
+<!--https://mllg.github.io/checkmate/articles/checkmate.html-->
 
-"Virtually every standard type of user error when passing arguments into function can be caught with a simple, readable line which produces an informative error message. 
+"Virtually every standard type of user error when passing arguments into function can be caught with a simple, readable line which produces an informative error message.
 
 A substantial part of the package was written in C to minimize any worries about execution time overhead."
-
 
 example CHI
 
@@ -291,16 +281,13 @@ check_class(x, "character")
 checkClass(x, "character")
 ```
 
-
 ```{r}
 #| echo: false
 check_class(x, "character")
 checkClass(x, "character")
 ```
 
-
 `check_class` and `checkClass` are exactly the same, simply choose whether you prefer `snake_case` or `camelCase`
-
 
 Functions beginning with `check` return either `TRUE`, (as above) or, the error message
 
@@ -309,7 +296,6 @@ Functions beginning with `check` return either `TRUE`, (as above) or, the error 
 check_class(x, "integer")
 ```
 
-
 Functions beginning with `assert` either return an error message, or the checked object is returned invisibly:
 
 ```{r}
@@ -317,13 +303,9 @@ Functions beginning with `assert` either return an error message, or the checked
 assert_class(x, "integer")
 ```
 
-
-
 ```{r}
 assert_class(x, "character")
 ```
-
-
 
 Going back to the CHI example, we can use `check_character` for a more fine grained series of checks
 
@@ -337,24 +319,17 @@ x3 <- c(x, x2, NA)
 x4 <- c(x, NA)
 ```
 
-
-
 ```{r}
 #| eval: false
 check_character(x2, n.chars = 10, pattern = "[^A-Z]{10}")
 check_character(x, n.chars = 10, pattern = "[^A-Z]{10}")
 ```
 
-
 ```{r}
 #| echo: false
 check_character(x2, n.chars = 10, pattern = "[^A-Z]{10}")
 check_character(x, n.chars = 10, pattern = "[^A-Z]{10}")
 ```
-
-
-
-
 
 ```{r}
 #| eval: false
@@ -366,8 +341,6 @@ check_character(x,
                 pattern = "\\d{10}")
 
 ```
-
-
 
 ```{r}
 #| warning: false
@@ -382,7 +355,6 @@ purrr::map_chr(vals,
                pattern = "\\d{10}")
 
 ```
-
 
 ```{r}
 #| warning: false
@@ -398,7 +370,6 @@ purrr::map_chr(vals,
                pattern = "\\d{10}")
 ```
 
-
 ```{r}
 #| eval: false
 # are first 6 elements a Date?
@@ -410,8 +381,6 @@ checkDate(as.Date(strptime(date_val,"%d%m%y", "UTC")),
           min.len = 1L)
 ```
 
-
-
 ```{r}
 date_val <- substr(x,1,6)
 checkDate(as.Date(strptime(date_val,"%d%m%y", "UTC")),
@@ -421,10 +390,7 @@ checkDate(as.Date(strptime(date_val,"%d%m%y", "UTC")),
           min.len = 1L)
 ```
 
-
-
 ## combine checks with the `assert` function
-
 
 ```{r}
 #| eval: false
@@ -442,9 +408,6 @@ main_check <- function(x){
          combine = "and")
 }
 ```
-
-
-
 
 ```{r}
 #| echo: false
@@ -463,19 +426,15 @@ main_check <- function(x){
 }
 ```
 
-
 ```{r}
 out <- main_check(x)
 out
 ```
 
+## for the lazy
 
-
-
-## for the lazy 
-
-- `qassert`  built in data types
-- `qassertr` lists and data frames
+-   `qassert` built in data types
+-   `qassertr` lists and data frames
 
 ```{r}
 qassert(x,"S+[10,11)") # character, vector length 1, lower bound 10 and less than 11
@@ -486,21 +445,15 @@ qassert(x,"S+[10,10]") # also works, between 10 and 10 (inclusive)
 # exact length of string 10 denoted by [10]
 ```
 
-
-
 ### testing
 
 we can use `{tinytest}` for some checks also
-
 
 ```{r}
 tinytest::expect_inherits(x, "character")
 ```
 
-
-Normally we'd list some expectations
-Here's a useless function that adds 2 to a given numerical value
-
+Normally we'd list some expectations Here's a useless function that adds 2 to a given numerical value
 
 ```{r}
 add_two <- function(x) {
@@ -520,8 +473,6 @@ add_two <- function(x) {
 }
 ```
 
-
-
 ```{r}
 using("checkmate")
 # test add_two works
@@ -531,19 +482,61 @@ expect_equal(1 + 2, add_two(1))
 
 ```
 
-
 ```{r}
 #| error: true
 add_two("one")
 ```
 
-
 ```{r}
 expect_error(add_two("one"))
 ```
 
+## further tests - am I in the best band in the world?
+
+```{r}
+is_metallic <- function(m){
+
+checkmate::check_character(m) # are we passing a character ?
+  
+checkmate::assert_choice(m, 
+                         choices = c("Lars", "James", "Kirk", 
+                                      "Rob", "Jason", "Cliff"),
+                         .var.name = "m") # is m in this set of values?
+
+  if (m %in% c("Jason", "Cliff")) {
+    out <- paste0(m, " _was_ Metallic")
+    return(out)
+  }                      
+  
+  
+  
+  if (!m %in% c("Jason", "Cliff")) {
+   out <- paste0(m, " IS Metallic")
+   return(out)
+  }   
+}
+```
+
+```{r}
+is_metallic("Lars")
+```
+
+```{r}
+is_metallic("James")
+```
+
+```{r}
+is_metallic("Jason")
+```
+
+```{r}
+#| error: true
+is_metallic("John")
+```
+
+![I know how he feels](sad_ben.jpg){fig-align="left"}
 
 ### Also
 
-- defensive programming
-- purrr (possibly / safely)
+-   defensive programming
+-   purrr (possibly / safely)
