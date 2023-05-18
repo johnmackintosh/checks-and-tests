@@ -2,7 +2,13 @@
 title: "checks and tests"
 author: "John MacKintosh"
 format: html
+theme:
+  light: flatly
+  dark: darkly
+code-line-numbers: true 
+code-overflow: wrap
 toc: true
+highlight-style: dracula
 ---
 
 ## checking and testing - a very quick primer
@@ -248,7 +254,7 @@ choose_council(1)
 
 ## chi_check()
 
-<!--https://github.com/Public-Health-Scotland/phsmethods/blob/master/R/chi_check.R-->
+See [phsmethods](https://github.com/Public-Health-Scotland/phsmethods/blob/master/R/chi_check.R)  
 
 What needs to be checked?
 
@@ -257,11 +263,10 @@ What needs to be checked?
 -   Do the first six digits denote a valid date?
 -   Is the checksum digit correct?
 
-We can deal with the first three quite quickly with `{checkmate}`
+We can deal with the first three quite quickly with the [{checkmate}](https://mllg.github.io/checkmate/articles/checkmate.html) package
 
-## checkmate
+## checkmate  
 
-<!--https://mllg.github.io/checkmate/articles/checkmate.html-->
 
 "Virtually every standard type of user error when passing arguments into function can be caught with a simple, readable line which produces an informative error message.
 
@@ -374,6 +379,9 @@ purrr::map_chr(vals,
 #| eval: false
 # are first 6 elements a Date?
 date_val <- substr(x,1,6)
+
+cat(date_val)
+
 checkDate(as.Date(strptime(date_val,"%d%m%y", "UTC")),
           lower = "1900-01-01",
           upper =  Sys.Date(),
@@ -382,7 +390,12 @@ checkDate(as.Date(strptime(date_val,"%d%m%y", "UTC")),
 ```
 
 ```{r}
+#| echo: false
+
 date_val <- substr(x,1,6)
+
+cat(date_val)
+
 checkDate(as.Date(strptime(date_val,"%d%m%y", "UTC")),
           lower = "1900-01-01",
           upper =  Sys.Date(),
@@ -459,7 +472,7 @@ Normally we'd list some expectations Here's a useless function that adds 2 to a 
 add_two <- function(x) {
 
   if (is.character(x)) {
-  stop("You've passed a character vector to this function.\nGonnae no' dae that? \nIt should be an integer or double")
+  stop("You've passed a character vector.\nGonnae no' dae that? \nIt should be an integer or double")
   }
 
   checkmate::assert_count(x)
